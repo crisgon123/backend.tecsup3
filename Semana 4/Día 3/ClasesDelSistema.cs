@@ -31,13 +31,45 @@ namespace UsoDeClases2
             string diaDeHoy = DateTime.Today.DayOfWeek.ToString();
             DateTime.IsLeapYear(año);
             Console.WriteLine(diaDeHoy);
-            */
-
+            
             Triangulo elTri = new Triangulo();
             elTri.calcularHipotenusa();
             elTri.mostrarHipotenusa();
+            
+            int aleatorio;
+            Random ran = new Random();
+            for (int i = 243984329; i < 243984339; i++)
+            {
+                aleatorio = ran.Next(62) + 136;
+                Console.WriteLine(aleatorio);
+            }
+            
+            Console.WriteLine("Muestra de mensajes aleatorios: ");
+            string[] nombre = { "Jesús", "Manuela", "José", "Jimena", "Mauro", "Irwin", "Luisa" };
+            string[] apellido = { "Medina", "Acosta", "Tejada", "Manrique", "Zevallos", "Rojas" };
+            string[] verbo = { "jugar", "bailar", "dormir", "estudiar" };
+            string[] lugar = { "la universidad", "la combi", "la casa", "fiestas", "ningún lugar" };
+            string[] tiempo = { "todos los días de mi vida", "eventualmente", "a toda hora", "de vez en cuando" };
+            Random ran = new Random();
+            do
+            {
+                string [] resultado = { $"Hola, soy {nombre[ran.Next(nombre.Length)]} " +
+                    $"{apellido[ran.Next(apellido.Length)]} y me gusta " +
+                    $"{verbo[ran.Next(verbo.Length)]} en " +
+                    $"{lugar[ran.Next(lugar.Length)]} " +
+                    $"{tiempo[ran.Next(tiempo.Length)]}" };
+                Console.WriteLine(resultado[0]);
+                Console.ReadLine();
+            } while (true);
+            */
 
+            Trabajador t = new Trabajador();
+            
         }
+    }
+    class Trabajador : Persona
+    {
+
     }
     class Persona
     {
@@ -48,6 +80,7 @@ namespace UsoDeClases2
         char _estadoCivil;
 
         //CONSTRUCTORES
+        /*
         public Persona(string dni, string nombre, int edad, char estadoCivil)
         {
             _DNI = dni;
@@ -55,6 +88,7 @@ namespace UsoDeClases2
             _edad = edad;
             _estadoCivil = estadoCivil;
         }
+        */
         //MÉTODOS (ACCIONES QUE REALIZA UN OBJETO)
         public void Comer(string comida)
         {
