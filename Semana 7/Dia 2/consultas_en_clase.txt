@@ -1,0 +1,102 @@
+select first_name from sales.customers
+
+select first_name from sales.customers
+where state = 'CA';
+
+select first_name from sales.customers
+where state = 'CA'
+order by last_name, first_name;
+
+select first_name from sales.customers
+order by len(first_name)
+
+select * from sales.customers -- select * tampoco es buena práctica
+order by 5  -- no es buena práctica
+
+-- count(*) cuenta cuantos registros se agruparon por ciudad
+select city, count(*) from sales.customers
+group by city
+having city = 'Astoria' 
+
+select * from sales.customers
+order by customer_id 
+offset 10 rows
+fetch next 10 rows only
+
+select top 10 with ties * from sales.customers
+order by last_name
+
+select top 10  * from sales.customers
+order by last_name
+
+select top 3 with ties 
+product_name, list_price from production.products
+order by list_price desc;
+select top 3
+product_name, list_price from production.products
+order by list_price desc;
+
+select distinct last_name  from sales.customers
+select  last_name  from sales.customers order by last_name
+
+select distinct last_name, first_name  from sales.customers
+
+select distinct phone from sales.customers order by phone;
+
+-- USO DEL COMANDO IN ( VALORES )
+-- ES EQUIVALENTE A DECIR LIST_PRICE = 499 OR LIST_PRICE = 699
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where list_price in (499.99,5299.99,399.99)
+-- BETWEEN, valores que están entre dos números
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where list_price between 499.99 and 5299.99
+
+
+
+
+-- % representa una cadena de texto
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%2016%'
+-- _ representa un solo caracter
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%201_'
+-- [] dentro de los corchetes indicamos las posibles combinaciones
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%201[456]'
+-- [#-#] dentro de los corchetes indicamos un rango de elementos
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%201[1-9]'
+
+create schema prueba
+-- En MYSQL es auto_increment 
+-- identity (comienzo, incremento)
+create table prueba.promociones (
+	idPromocion int primary key not null identity (1,1),
+	nombre_promocion varchar (255) not null,
+	descuento decimal (3,2) default 0,
+); 
+select * from prueba.promociones
+insert into prueba.promociones values 
+('Descuento de verano', 0.20)
+-- Inserción de un valor. El descuento toma el valor por defecto (0)
+insert into prueba.promociones (nombre_promocion) values 
+('Descuento de invierno')
+-- output muestra lo insertado con la ayuda de "inserted"
+insert into prueba.promociones (nombre_promocion,descuento) 
+output inserted.idPromocion, inserted.nombre_promocion, inserted.descuento
+values 
+('Descuento de juguetes',0.90)
+
+-- Inserción de varias filas/registros
+insert into prueba.promociones (nombre_promocion,descuento) 
+values 
+('Descuento de juguetes',0.90),
+('Descuentón',0.99),
+('Sin descuento',0)
+
