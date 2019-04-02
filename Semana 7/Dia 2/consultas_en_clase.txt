@@ -73,7 +73,7 @@ select product_id, product_name, category_id, model_year,list_price
 from production.products
 where product_name like '%201[1-9]'
 
-create schema prueba
+create schema prueba;
 -- En MYSQL es auto_increment 
 -- identity (comienzo, incremento)
 create table prueba.promociones (
@@ -99,4 +99,46 @@ values
 ('Descuento de juguetes',0.90),
 ('Descuentón',0.99),
 ('Sin descuento',0)
+
+create table prueba.direcciones (
+	iddireccion int not null primary key identity (1,1),
+	calle varchar (255) not null,
+	ciudad varchar (50),
+	estado varchar (25),
+	zip varchar (5)
+)
+-- COPIA DE REGISTROS DE UNA TABLA A OTRA
+select * from prueba.direcciones
+insert into prueba.direcciones 
+select street,city,state,zip_code 
+from sales.customers
+-- TRUNCATE TABLE  borrar registros de una tabla (más rápido y efectivo
+-- en tablas con muchos datos
+truncate table prueba.direcciones
+
+CREATE TABLE prueba.tarifa(
+idtarifa int primary key identity (1,1),
+nombre_tarifa varchar(20),
+-- se usa un valor por defecto para la fecha
+actualizadoEl date default '19800101'
+)
+insert into prueba.tarifa (nombre_tarifa) values 
+('Tarifa A'), ('Tarifa CE'), ('Tarifa LO'), ('Tarifa PIE'), ('Tarifa KOD'),
+('Tarifa ENN'), ('Tarifa SDC'), ('Tarifa EER'), ('Tarifa All')
+
+select * from prueba.tarifa
+-- se actualizan los campos de todas los registros
+update prueba.tarifa set actualizadoEl = getdate();
+-- se actualiza solo donde especifica "where"
+update prueba.tarifa set nombre_tarifa = 'NUEVA TARIFA' where idtarifa in (1,3,6)
+
+-- delete borra registros de una tabla
+-- where indica donde borrar
+delete from prueba.tarifa where nombre_tarifa like '%nueva%'
+-- top (2) indica que se van a borrar los dos primeros registros
+delete top (2) from prueba.tarifa
+--si no se especifica nada, se borra todo
+delete from prueba.tarifa
+
+
 
