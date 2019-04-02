@@ -141,4 +141,218 @@ delete top (2) from prueba.tarifa
 delete from prueba.tarifa
 
 
+select first_name from sales.customers
+
+select first_name from sales.customers
+where state = 'CA';
+
+select first_name from sales.customers
+where state = 'CA'
+order by last_name, first_name;
+
+select first_name from sales.customers
+order by len(first_name)
+
+select * from sales.customers -- select * tampoco es buena práctica
+order by 5  -- no es buena práctica
+
+-- count(*) cuenta cuantos registros se agruparon por ciudad
+select city, count(*) from sales.customers
+group by city
+having city = 'Astoria' 
+
+select * from sales.customers
+order by customer_id 
+offset 10 rows
+fetch next 10 rows only
+
+select top 10 with ties * from sales.customers
+order by last_name
+
+select top 10  * from sales.customers
+order by last_name
+
+select top 3 with ties 
+product_name, list_price from production.products
+order by list_price desc;
+select top 3
+product_name, list_price from production.products
+order by list_price desc;
+
+select distinct last_name  from sales.customers
+select  last_name  from sales.customers order by last_name
+
+select distinct last_name, first_name  from sales.customers
+
+select distinct phone from sales.customers order by phone;
+
+-- USO DEL COMANDO IN ( VALORES )
+-- ES EQUIVALENTE A DECIR LIST_PRICE = 499 OR LIST_PRICE = 699
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where list_price in (499.99,5299.99,399.99)
+-- BETWEEN, valores que están entre dos números
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where list_price between 499.99 and 5299.99
+
+
+
+
+-- % representa una cadena de texto
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%2016%'
+-- _ representa un solo caracter
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%201_'
+-- [] dentro de los corchetes indicamos las posibles combinaciones
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%201[456]'
+-- [#-#] dentro de los corchetes indicamos un rango de elementos
+select product_id, product_name, category_id, model_year,list_price
+from production.products
+where product_name like '%201[1-9]'
+
+create schema prueba;
+-- En MYSQL es auto_increment 
+-- identity (comienzo, incremento)
+create table prueba.promociones (
+	idPromocion int primary key not null identity (1,1),
+	nombre_promocion varchar (255) not null,
+	descuento decimal (3,2) default 0,
+); 
+select * from prueba.promociones
+insert into prueba.promociones values 
+('Descuento de verano', 0.20)
+-- Inserción de un valor. El descuento toma el valor por defecto (0)
+insert into prueba.promociones (nombre_promocion) values 
+('Descuento de invierno')
+-- output muestra lo insertado con la ayuda de "inserted"
+insert into prueba.promociones (nombre_promocion,descuento) 
+output inserted.idPromocion, inserted.nombre_promocion, inserted.descuento
+values 
+('Descuento de juguetes',0.90)
+
+-- Inserción de varias filas/registros
+insert into prueba.promociones (nombre_promocion,descuento) 
+values 
+('Descuento de juguetes',0.90),
+('Descuentón',0.99),
+('Sin descuento',0)
+
+create table prueba.direcciones (
+	iddireccion int not null primary key identity (1,1),
+	calle varchar (255) not null,
+	ciudad varchar (50),
+	estado varchar (25),
+	zip varchar (5)
+)
+-- COPIA DE REGISTROS DE UNA TABLA A OTRA
+select * from prueba.direcciones
+insert into prueba.direcciones 
+select street,city,state,zip_code 
+from sales.customers
+-- TRUNCATE TABLE  borrar registros de una tabla (más rápido y efectivo
+-- en tablas con muchos datos
+truncate table prueba.direcciones
+
+CREATE TABLE prueba.tarifa(
+idtarifa int primary key identity (1,1),
+nombre_tarifa varchar(20),
+-- se usa un valor por defecto para la fecha
+actualizadoEl date default '19800101'
+)
+insert into prueba.tarifa (nombre_tarifa) values 
+('Tarifa A'), ('Tarifa CE'), ('Tarifa LO'), ('Tarifa PIE'), ('Tarifa KOD'),
+('Tarifa ENN'), ('Tarifa SDC'), ('Tarifa EER'), ('Tarifa All')
+
+select * from prueba.tarifa
+-- se actualizan los campos de todas los registros
+update prueba.tarifa set actualizadoEl = getdate();
+-- se actualiza solo donde especifica "where"
+update prueba.tarifa set nombre_tarifa = 'NUEVA TARIFA' where idtarifa in (1,3,6)
+
+-- delete borra registros de una tabla
+-- where indica donde borrar
+delete from prueba.tarifa where nombre_tarifa like '%nueva%'
+-- top (2) indica que se van a borrar los dos primeros registros
+delete top (2) from prueba.tarifa
+--si no se especifica nada, se borra todo
+delete from prueba.tarifa
+
+-- poner un nombre a las columnas 
+select first_name+ ' '+ last_name as 'Nombre completo'
+from sales.customers
+
+-- Unión de dos consultas, el resultado lo da en un tabla
+-- solo va a mostrar los resultados distintos
+select first_name, last_name from sales.customers --1445 filas
+-- all, muestra todos los resultados (repetidos)
+union all
+select first_name, last_name from sales.staffs -- 10 filas
+
+select first_name, last_name from sales.customers 
+-- intersect es una interseccion de tablas, se mantienen registros comunes
+select last_name from sales.customers 
+intersect 
+select last_name from sales.staffs 
+
+-- except es un resta de tablas, la segunda quita elementos de la primera
+select last_name from sales.customers 
+except 
+select last_name from sales.staffs 
+
+select last_name from sales.staffs 
+except 
+select last_name from sales.customers
+
+select order_id, order_date, customer_id  from sales.orders
+where customer_id in 
+(
+	select customer_id  
+	from sales.customers 
+	where city = 'New York' 
+)
+
+
+select brand_id from production.brands 
+where brand_name in ('Strider','Trek')
+
+select  * from production.categories
+
+select  product_name,list_price, category_id 
+from  production.products
+
+select  product_name,list_price, cat.category_name 
+from  production.products as pro				
+inner join production.categories as cat 
+on pro.category_id = cat.category_id
+
+select product_name, order_id  from 
+production.products as p       left join       sales.order_items as oi 
+on p.product_id = oi.product_id
+
+select product_name, order_id  from 
+production.products as p  
+full outer join  sales.order_items as oi 
+on p.product_id = oi.product_id
+
+-- cross join 
+select product_name, order_id  from 
+production.products as p  
+cross join  sales.order_items as oi 
+
+-- cambiar nombre a base de datos
+exec sp_rename 'prueba', 'promos' 
+
+
+
+
+
+
+
+
 
