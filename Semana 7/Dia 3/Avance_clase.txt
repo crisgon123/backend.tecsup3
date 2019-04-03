@@ -1,0 +1,54 @@
+create table prueba.unatabla (
+	nombre varchar(45),
+	-- check verifica un condición para que puedan ingresar datos
+	precio int check (precio>0)
+)
+
+-- se insertó normalmente
+insert into prueba.unatabla values 
+	('un nombre',190 )
+
+insert into prueba.unatabla values
+	(-99190) -- no se puede hacer la inserción ya que
+							--viola una condición del CHECK
+
+drop table prueba.unatabla;
+
+select * from prueba.unatabla;
+
+
+
+-- AGREGAR UNA COLUMNA A UNA TABLA
+alter table prueba.unatabla
+add id int primary key not null, --AUTO_INCREMENT en MySQL
+	precio int default 0,
+	total int;
+
+-- MODIFICAR PROPIEDADES (CONSTRAINTS) DE UNA COLUMNA DE UNA TABLA
+alter table prueba.unatabla
+alter column precio int not null     --modify en MySQL
+
+
+alter table prueba.unatabla
+alter column precio int not null  
+
+-- eliminar columna de una tabla
+alter table prueba.unatabla
+drop column nombre 
+
+-- solo hay una columna en la tabla y no puede ser eliminada
+alter table prueba.unatabla
+drop column precio 
+
+-- se borra la restricción CHECK
+alter table prueba.unatabla
+drop constraint CK__unatabla__precio__04E4BC85
+
+select * from prueba.unatabla
+
+-- exec es para ejecutar procedimientos almacenados
+-- renombrar tabla <nombre_tabla.nombre_columna>, <nuevo_nombre> , COLUMN
+exec sp_rename 'prueba.unatabla.precio', 'numeros' , 'COLUMN'
+
+-- borrar tabla si existe
+drop table if exists prueba.unatabla
