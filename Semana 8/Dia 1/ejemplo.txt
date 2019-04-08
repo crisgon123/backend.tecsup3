@@ -1,0 +1,11 @@
+static void Main(string[] args)
+        {
+            string nombreArchivo = "un archivo.txt";
+        }
+        static void ReadFile (string nombre)
+        {
+            TextReader reader = new StreamReader(nombre);
+            string line = reader.ReadLine();
+            Console.WriteLine(line);
+            reader.Close();
+        }
