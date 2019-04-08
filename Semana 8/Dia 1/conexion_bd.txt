@@ -27,21 +27,50 @@ namespace BasesDeDatos
             {
                 Console.WriteLine("No se pudo conectar");
             }
-            string usuario = "Christian", clave = "123";
+            string usuario = "Christian", clave = "1234";
 
-            cmd = new SqlCommand("select * from usuarios where " +
+            //CONSULTA DE USUARIOS EN LA BASE DE DATOS
+            cmd = new SqlCommand("select count (*) from usuarios where " +
                 $"nombre = '{usuario}' and clave = '{clave}'", con);
 
-            string resultado = cmd.ExecuteScalar().ToString();
-
-            if (resultado != null)
+            
+            int resultado = Convert.ToInt32( cmd.ExecuteScalar());
+            if (resultado == 1)
             {
-                Console.WriteLine($"Se encontró el usuario {resultado}");
+                cmd = new SqlCommand("select clave from usuarios where " +
+                $"nombre = '{usuario}' and clave = '{clave}'", con);
+                string name = cmd.ExecuteScalar().ToString();
+                Console.WriteLine($"Se encontró el usuario {name}");
+
             }
             else
-            {
                 Console.WriteLine("No hubo resultados");
+
+            // INSERCIÓN DE REGISTROS (INSERT)
+            string nuevoUsuario = "Tecsup", nuevaClave = "Virtu@l";
+            cmd = new SqlCommand($"insert into usuarios values('{nuevoUsuario}'," +
+                $"'{nuevaClave}')",con);
+            //if (cmd.ExecuteNonQuery() > 0)
+                Console.WriteLine("Se insertó correctamente.");
+
+            // ACTUALIZACIÓN DE REGISTROS (UPDATE)
+            nuevoUsuario = "Christian"; nuevaClave = "Virtu@l";
+            cmd = new SqlCommand($"update usuarios set clave='{nuevaClave}' " +
+                $"where nombre='{nuevoUsuario}'", con);
+            //if (cmd.ExecuteNonQuery() > 0)
+                Console.WriteLine("Se modificó correctamente.");
+
+            // CONSULTA DE DATOS
+            cmd = new SqlCommand($"select nombre,clave from usuarios", con);
+            // DataReader SE ENCARGA DE ALMACENAR LOS REGISTROS
+            SqlDataReader reader = cmd.ExecuteReader();
+            //READ() HACE LA LECTURA DE REGISTROS LINEA POR LINEA
+            while (reader.Read())
+            {
+                Console.Write($"Usuario: {reader[0]} \t Clave: {reader[1]} \n");
             }
+
+
             con.Close();
         }
     }
