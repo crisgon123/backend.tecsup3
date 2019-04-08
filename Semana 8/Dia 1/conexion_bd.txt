@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+
+
+namespace BasesDeDatos
+{
+    class Program
+    {
+        static SqlConnection con;
+        static SqlCommand cmd;
+
+        static void Main(string[] args)
+        {
+            con = new SqlConnection("Data Source=CRISGON-TP\\SQLEXPRESS;" +
+                "Initial Catalog = BikeStores; Integrated Security = True");
+            try
+            {
+                con.Open();
+                Console.WriteLine("Se conectó correctamente");
+                
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("No se pudo conectar");
+            }
+            string usuario = "Christian", clave = "123";
+
+            cmd = new SqlCommand("select * from usuarios where " +
+                $"nombre = '{usuario}' and clave = '{clave}'", con);
+
+            string resultado = cmd.ExecuteScalar().ToString();
+
+            if (resultado != null)
+            {
+                Console.WriteLine($"Se encontró el usuario {resultado}");
+            }
+            else
+            {
+                Console.WriteLine("No hubo resultados");
+            }
+            con.Close();
+        }
+    }
+}
