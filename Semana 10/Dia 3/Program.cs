@@ -17,6 +17,7 @@ namespace EF_Relaciones
                nombre = "Jorge",
                apellido = "Garnica"
             });
+            
             context.SaveChanges();
          }
 
