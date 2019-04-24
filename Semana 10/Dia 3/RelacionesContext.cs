@@ -21,15 +21,35 @@ namespace EF_Relaciones
       
       protected override void OnModelCreating(DbModelBuilder modelBuilder)
       {
+         // AUTOMÁTICAS
+         // RELACION DE UNO A MUCHOS
          modelBuilder.Entity<Profesor>()
             .HasMany(x => x.Cursos)
             .WithRequired(x => x.Profesor)
             .HasForeignKey(x => x.id___profesor);
 
+         // AUTOMÁTICAS
+         // RELACION DE MUCHOS A MUCHOS
          modelBuilder.Entity<Estudiante>()
-            .HasMany<Curso>(x => x.Cursos)
-            .WithMany(x => x.Estudiantes);
-            
+            .HasMany(x => x.Cursos)
+            .WithMany(x => x.Estudiantes)
+            .Map(x =>
+                 {
+                    x.MapLeftKey("id___Estudiante");
+                    x.MapRightKey("id___Curso");
+                    x.ToTable("EstudianteConCursos");
+                 });
+
+         // CONFIGURAR MANUALMENTE
+         // RELACION DE 1 A 0..1
+         modelBuilder.Entity<Estudiante>()
+            .HasOptional(x => x.Direccion)
+            .WithRequired(x => x.Estudiante);
+
+         // RELACION DE 1 A 1
+         modelBuilder.Entity<Telefono>()
+            .HasRequired(x => x.Estudiante)
+            .WithRequiredPrincipal(x => x.Telefono);
 
          base.OnModelCreating(modelBuilder);
       }

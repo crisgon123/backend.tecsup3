@@ -8,6 +8,10 @@ namespace EF_Relaciones
 {
    public class Profesor
    {
+      public Profesor()
+      {
+         Cursos = new HashSet<Curso>();
+      }
       public int id { get; set; }
       public string nombre { get; set; }
       public string apellido { get; set; }

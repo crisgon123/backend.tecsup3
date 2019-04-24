@@ -12,12 +12,39 @@ namespace EF_Relaciones
       {
          using (var context = new RelacionesContext())
          {
-            context.Profesores.Add(new Profesor
+            var profe = new Profesor()
             {
                nombre = "Jorge",
                apellido = "Garnica"
+            };
+            context.Profesores.Add(new Profesor
+            {
+               nombre = "Patrick",
+               apellido = "Rodriguez"
+            });
+
+            var est = new Estudiante()
+            {
+               nombre = "Christian",
+               Telefono = new Telefono { numeroTelefonico = 1234123 }
+
+            };
+            var cur = new Curso()
+            {
+               nombreCurso = "Angular",
+               Profesor = profe
+            };
+
+            est.Cursos.Add(cur);
+            context.Cursos.Add(new Curso
+            {
+               nombreCurso = "SCRUM",
+               Profesor = profe,
+               
             });
             
+            context.Estudiantes.Add(est);
+
             context.SaveChanges();
          }
 
